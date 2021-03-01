@@ -1,17 +1,17 @@
 import retro
-from stable_baselines.common.vec_env import SubprocVecEnv, DummyVecEnv, VecFrameStack, VecNormalize
-from stable_baselines import PPO2, A2C
+from stable_baselines3.common.vec_env import SubprocVecEnv, DummyVecEnv, VecFrameStack, VecNormalize
+from stable_baselines3 import PPO, A2C
 import numpy as np
 import gym
-from stable_baselines.common.callbacks import CheckpointCallback
+from stable_baselines3.common.callbacks import CheckpointCallback
 from utils import *
 
 if __name__ == "__main__":
-    num_envs = 16 # Must use the save number of envs as trained on but we create a single dummy env for testing.
-    envs = SubprocVecEnv([make_env] * num_envs)    
+    num_envs = 16  # Must use the save number of envs as trained on but we create a single dummy env for testing.
+    envs = SubprocVecEnv([make_env] * num_envs)
     envs = VecFrameStack(envs, n_stack=4)
 
-    model = PPO2.load("./subzero_model.zip")
+    model = PPO.load("./subzero_model.zip")
     model.set_env(envs)
     obs = envs.reset()
     print(obs.shape)
@@ -34,9 +34,7 @@ if __name__ == "__main__":
         env.render(mode="human")
         if dones.all() == True:
             break
-            
+
         zero_completed_obs = np.zeros((num_envs,) + envs.observation_space.shape)
         zero_completed_obs[0, :] = obs
         obs = zero_completed_obs
-        
-

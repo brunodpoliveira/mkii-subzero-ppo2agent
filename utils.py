@@ -2,6 +2,7 @@ import numpy as np
 import gym
 import retro
 
+
 class Discretizer(gym.ActionWrapper):
     """
     Wrap a gym environment and make it use discrete actions.
@@ -26,6 +27,7 @@ class Discretizer(gym.ActionWrapper):
     def action(self, act):
         return self._decode_discrete_action[act].copy()
 
+
 # X = High Punch          Y = Block       Z = High Kick
 # A = Low Punch           B = Block       C = Low Kick
 # Jump Kick   :  Up + HIGH or LOW KICK
@@ -47,26 +49,32 @@ class SubzeroDiscretizer(Discretizer):
     # Ground Freeze: D, B, LK
     # Slide: B + LK + HK 
     def __init__(self, env):
-        super().__init__(env=env, buttons=env.unwrapped.buttons, combos=[[], ['X'], ['A'], ['Z'], ['C'], ['Y'], ['START'], ['UP'], ['DOWN'], ['LEFT'], ['RIGHT'], 
-        ['LEFT', 'UP'], ['LEFT', 'DOWN'], ['RIGHT', 'UP'], ['RIGHT', 'DOWN'],
-        ['UP', 'Z'], ['LEFT', 'UP', 'Z'], ['RIGHT', 'UP', 'Z'],
-        ['UP', 'X'], ['LEFT', 'UP', 'X'], ['RIGHT', 'UP', 'X'],
-        ['LEFT', 'X'], ['RIGHT', 'X'], ['LEFT', 'DOWN', 'X'], ['RIGHT', 'DOWN', 'X'],
-        ['LEFT', 'A'], ['RIGHT', 'A'], ['LEFT', 'UP', 'A'], ['RIGHT', 'UP', 'A'], ['LEFT', 'DOWN', 'A'], ['RIGHT', 'DOWN', 'A'],
-        ['DOWN', 'X'],
-        ['DOWN', 'A'], 
-        ['DOWN', 'C'], ['LEFT', 'DOWN', 'C'], ['RIGHT', 'DOWN', 'C'],
-        ['DOWN', 'Y'], ['DOWN', 'LEFT', 'Y'], ['DOWN', 'RIGHT', 'Y'],
-        ['LEFT', 'C', 'Z'], ['RIGHT', 'C', 'Z']
-        ])
+        super().__init__(env=env, buttons=env.unwrapped.buttons,
+                         combos=[[], ['X'], ['A'], ['Z'], ['C'], ['Y'], ['START'], ['UP'], ['DOWN'], ['LEFT'],
+                                 ['RIGHT'],
+                                 ['LEFT', 'UP'], ['LEFT', 'DOWN'], ['RIGHT', 'UP'], ['RIGHT', 'DOWN'],
+                                 ['UP', 'Z'], ['LEFT', 'UP', 'Z'], ['RIGHT', 'UP', 'Z'],
+                                 ['UP', 'X'], ['LEFT', 'UP', 'X'], ['RIGHT', 'UP', 'X'],
+                                 ['LEFT', 'X'], ['RIGHT', 'X'], ['LEFT', 'DOWN', 'X'], ['RIGHT', 'DOWN', 'X'],
+                                 ['LEFT', 'A'], ['RIGHT', 'A'], ['LEFT', 'UP', 'A'], ['RIGHT', 'UP', 'A'],
+                                 ['LEFT', 'DOWN', 'A'], ['RIGHT', 'DOWN', 'A'],
+                                 ['DOWN', 'X'],
+                                 ['DOWN', 'A'],
+                                 ['DOWN', 'C'], ['LEFT', 'DOWN', 'C'], ['RIGHT', 'DOWN', 'C'],
+                                 ['DOWN', 'Y'], ['DOWN', 'LEFT', 'Y'], ['DOWN', 'RIGHT', 'Y'],
+                                 ['LEFT', 'C', 'Z'], ['RIGHT', 'C', 'Z']
+                                 ])
+
 
 gamename = "MortalKombatII-Genesis"
+
 
 # start from the 1st fight on very easy playing as Sub-Zero
 def make_env():
     env = retro.make(gamename, state='firstfightveryeasy.state', obs_type=retro.Observations.IMAGE)
     env = SubzeroDiscretizer(env)
     return env
+
 
 def make_env_record():
     env = retro.make(gamename, state='firstfightveryeasy.state', obs_type=retro.Observations.IMAGE)
