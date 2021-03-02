@@ -11,7 +11,7 @@ if __name__ == "__main__":
     envs = SubprocVecEnv([make_env] * num_envs)
     envs = VecFrameStack(envs, n_stack=4)
 
-    model = PPO.load("./subzero_model.zip")
+    model = PPO.load("./subzero_model")
     model.set_env(envs)
     obs = envs.reset()
     print(obs.shape)
